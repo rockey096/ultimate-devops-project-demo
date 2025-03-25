@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('ad') {
+            steps {
+                dir('service-1') {   // Navigate to the specific microservice directory
+                    sh 'mvn clean install'  // Change this based on your build tool
+                }
+            }
+        }
+
+        stage('Test Service-1') {
+            steps {
+                dir('service-1') {
+                    sh 'mvn test'  // Run tests for the microservice
+                }
+            }
+        }
+
+        stage('Package Service-1') {
+            steps {
+                dir('service-1') {
+                    sh 'docker build -t my-service-1:latest .'  // Build Docker image
+                }
+            }
+        }
+
+        stage('Push to Docker Registry') {
+            steps {
+                withDockerRegistry([credentialsId: 'docker-hub', url: '']) {
+                    dir('service-1') {
+                        sh 'docker tag my-service-1:latest my-dockerhub-user/my-service-1:latest'
+                        sh 'docker push my-dockerhub-user/my-service-1:latest'
+                    }
+                }
+            }
+        }
+    }
+}
