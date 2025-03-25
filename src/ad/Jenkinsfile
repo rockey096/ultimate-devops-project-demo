@@ -28,12 +28,12 @@ pipeline {
             }
         }
 
-        stage('Package ad') {
-            steps {
-                dir('src/ad') {
-                    sh 'docker build -t my-service-1:latest .'  // Build Docker image
-                }
-            }
-        }
+        // stage('Package ad') {
+        //     steps {
+        //         dir('src/ad') {
+        //             sh 'docker build -t my-service-1:latest .'  // Build Docker image
+        //         }
+        //     }
+        // }
     }
 }
