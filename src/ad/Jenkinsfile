@@ -10,23 +10,23 @@ pipeline {
 
         stage('ad') {
             steps {
-                dir('service-1') {   // Navigate to the specific microservice directory
+                dir('src/ad') {   // Navigate to the specific microservice directory
                     sh 'mvn clean install'  // Change this based on your build tool
                 }
             }
         }
 
-        stage('Test Service-1') {
+        stage('Test ad') {
             steps {
-                dir('service-1') {
+                dir('src/ad') {
                     sh 'mvn test'  // Run tests for the microservice
                 }
             }
         }
 
-        stage('Package Service-1') {
+        stage('Package ad') {
             steps {
-                dir('service-1') {
+                dir('src/ad') {
                     sh 'docker build -t my-service-1:latest .'  // Build Docker image
                 }
             }
@@ -35,7 +35,7 @@ pipeline {
         stage('Push to Docker Registry') {
             steps {
                 withDockerRegistry([credentialsId: 'docker-hub', url: '']) {
-                    dir('service-1') {
+                    dir('src/ad') {
                         sh 'docker tag my-service-1:latest my-dockerhub-user/my-service-1:latest'
                         sh 'docker push my-dockerhub-user/my-service-1:latest'
                     }
