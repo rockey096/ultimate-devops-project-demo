@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven'  // Should match the name in Global Tool Configuration
+        gradle 'Gradle'  // Ensure Gradle is configured in Global Tool Configuration
     }
 
     stages {
@@ -12,10 +12,10 @@ pipeline {
             }
         }
 
-        stage('ad') {
+        stage('Build ad') {
             steps {
                 dir('src/ad') {   // Navigate to the specific microservice directory
-                    sh 'mvn clean install'  // Change this based on your build tool
+                    sh './gradlew clean build'  // Using Gradle wrapper for build
                 }
             }
         }
@@ -23,7 +23,7 @@ pipeline {
         stage('Test ad') {
             steps {
                 dir('src/ad') {
-                    sh 'mvn test'  // Run tests for the microservice
+                    sh './gradlew test'  // Run tests using Gradle
                 }
             }
         }
@@ -32,17 +32,6 @@ pipeline {
             steps {
                 dir('src/ad') {
                     sh 'docker build -t my-service-1:latest .'  // Build Docker image
-                }
-            }
-        }
-
-        stage('Push to Docker Registry') {
-            steps {
-                withDockerRegistry([credentialsId: 'docker-hub', url: '']) {
-                    dir('src/ad') {
-                        sh 'docker tag my-service-1:latest my-dockerhub-user/my-service-1:latest'
-                        sh 'docker push my-dockerhub-user/my-service-1:latest'
-                    }
                 }
             }
         }
