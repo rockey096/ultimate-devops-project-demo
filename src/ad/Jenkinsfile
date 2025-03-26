@@ -3,6 +3,14 @@ pipeline {
 
     tools {
         gradle 'Gradle'  // Ensure Gradle is configured in Global Tool Configuration
+        dockerTool 'Docker'
+    }
+
+    environment {
+        DOCKER_IMAGE = 'ad-service'
+        DOCKER_TAG = 'v1'
+        DOCKER_REGISTRY = 'docker.io'  // Change if using a private registry
+        DOCKER_REPO = 'your-dockerhub-username/ad-service'  // Replace with your Docker Hub repo
     }
 
     stages {
@@ -14,8 +22,8 @@ pipeline {
 
         stage('Build ad') {
             steps {
-                dir('src/ad') {   // Navigate to the specific microservice directory
-                    sh './gradlew clean build'  // Using Gradle wrapper for build
+                dir('src/ad') {   
+                    sh './gradlew clean build'  
                 }
             }
         }
@@ -23,17 +31,26 @@ pipeline {
         stage('Test ad') {
             steps {
                 dir('src/ad') {
-                    sh './gradlew test'  // Run tests using Gradle
+                    sh './gradlew test'  
                 }
             }
         }
 
-        // stage('Package ad') {
-        //     steps {
-        //         dir('src/ad') {
-        //             sh 'docker build -t my-service-1:latest .'  // Build Docker image
-        //         }
-        //     }
-        // }
+        stage('Build Docker Image') {
+            steps {
+                dir('src/ad') {
+                    sh "docker build -t $DOCKER_IMAGE:$DOCKER_TAG ."
+                }
+            }
+        }
+
+        stage('Push to Registry') {
+            steps {
+                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: "https://$DOCKER_REGISTRY"]) {
+                    sh "docker tag $DOCKER_IMAGE:$DOCKER_TAG $DOCKER_REPO:$DOCKER_TAG"
+                    sh "docker push $DOCKER_REPO:$DOCKER_TAG"
+                }
+            }
+        }
     }
 }
