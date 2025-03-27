@@ -9,7 +9,7 @@ pipeline {
         DOCKER_IMAGE = 'ad'
         DOCKER_TAG = 'v1'
         DOCKER_REGISTRY = 'docker.io'
-        DOCKER_REPO = 'manikiran096/ad-service'
+        DOCKER_REPO = 'manikiran0096/ad-service'
     }
 
     stages {
