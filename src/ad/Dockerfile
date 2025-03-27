@@ -2,8 +2,9 @@ FROM eclipse-temurin:21-jdk AS builder
 
 WORKDIR /usr/src/app/
 
-COPY gradlew* settings.gradle* build.gradle .
-COPY ./gradle ./gradle
+COPY gradlew* settings.gradle* build.gradle /usr/src/app/
+
+COPY ./gradle /usr/src/app/gradle
 
 RUN chmod +x ./gradlew
 RUN ./gradlew
@@ -20,7 +21,7 @@ FROM eclipse-temurin:21-jre
 
 WORKDIR /usr/src/app/
 
-COPY --from=builder /usr/src/app/ ./
+COPY --from=builder /usr/src/app/ /usr/src/app/
 
 ENV AD_PORT 9099
 
