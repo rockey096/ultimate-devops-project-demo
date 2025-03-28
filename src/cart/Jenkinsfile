@@ -54,11 +54,11 @@ pipeline {
     //     }
     // }
 
-   stage('Post') {
-        always {
-            echo 'Cleaning up workspace...'
-            cleanWs()
-        }
-    }
+   // stage('Post') {
+   //      always {
+   //          echo 'Cleaning up workspace...'
+   //          cleanWs()
+   //      }
+   //  }
 }
 }
