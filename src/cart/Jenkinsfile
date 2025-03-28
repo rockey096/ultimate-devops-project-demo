@@ -10,7 +10,8 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/rockey096/ultimate-devops-project-demo.git' // Replace with actual repo URL
+                git branch: 'main', url: 'https://github.com/rockey096/ultimate-devops-project-demo.git'
+
             }
         }
 
