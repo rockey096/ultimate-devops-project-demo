@@ -54,7 +54,7 @@ pipeline {
     //     }
     // }
 
-    post {
+   stage('Post') {
         always {
             echo 'Cleaning up workspace...'
             cleanWs()
